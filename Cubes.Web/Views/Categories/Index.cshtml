@@ -1,0 +1,33 @@
+﻿@model IEnumerable<Cubes.Web.Models.Categorie>
+
+@{
+    ViewBag.Title = "Catégories";
+}
+
+<h2>Les catégories de ressources</h2>
+
+<p>
+    @Html.ActionLink("Nouveau", "Create", new { }, new { @class = "btn btn-primary" })
+</p>
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.Libelle)
+        </th>
+        <th class="text-center">Actions</th>
+    </tr>
+
+@foreach (var item in Model) {
+    <tr>
+        <td>
+            @Html.DisplayFor(modelItem => item.Libelle)
+        </td>
+        <td class="text-center">
+            @Html.ActionLink("Editer", "Edit", new { id=item.IdCategorie }, new { @class = "btn btn-success" })
+            @Html.ActionLink("Détails", "Details", new { id=item.IdCategorie }, new { @class = "btn btn-warning" })
+            @Html.ActionLink("Supprimer", "Delete", new { id=item.IdCategorie }, new { @class = "btn btn-danger" })
+        </td>
+    </tr>
+}
+
+</table>

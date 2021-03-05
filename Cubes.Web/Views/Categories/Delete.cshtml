@@ -1,0 +1,31 @@
+﻿@model Cubes.Web.Models.Categorie
+
+@{
+    ViewBag.Title = "Suppréssion";
+}
+
+<h2 class="text-center">Supprimer la catégorie</h2>
+
+<h4>Souhaitez-vous vraiment supprimer cette catégorie?</h4>
+<div>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.Libelle)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Libelle)
+        </dd>
+
+    </dl>
+
+    @using (Html.BeginForm()) {
+        @Html.AntiForgeryToken()
+
+        <div class="form-actions no-color">
+            <input type="submit" value="Supprimer" class="btn btn-primary" />
+            @Html.ActionLink("Revenir à la liste", "Index", new { }, new { @class = "btn btn-warning"})
+        </div>
+    }
+</div>

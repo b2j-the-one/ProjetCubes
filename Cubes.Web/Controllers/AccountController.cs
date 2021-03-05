@@ -9,6 +9,9 @@ using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security;
 using Cubes.Web.Models;
+using Cubes.Web.Helpers;
+using System.IO;
+using Microsoft.AspNet.Identity.EntityFramework;
 
 namespace Cubes.Web.Controllers
 {
@@ -17,6 +20,7 @@ namespace Cubes.Web.Controllers
     {
         private ApplicationSignInManager _signInManager;
         private ApplicationUserManager _userManager;
+        private DataContext db = new DataContext();
 
         public AccountController()
         {
@@ -61,6 +65,22 @@ namespace Cubes.Web.Controllers
             return View();
         }
 
+        // Session utilisateur
+        public void Profil(LoginViewModel model)
+        {
+            var user = db.Users.Where(u => u.Email == model.Email).FirstOrDefault();
+
+            if (user != null)
+            {
+                var utilisateur = db.Users.Find(user.IdUser);
+                if (utilisateur != null)
+                {
+                    Session["Photo"] = utilisateur.Photo;
+                    Session["Prenom"] = utilisateur.Prenom;
+                }
+            }
+        }
+
         //
         // POST: /Account/Login
         [HttpPost]
@@ -79,6 +99,7 @@ namespace Cubes.Web.Controllers
             switch (result)
             {
                 case SignInStatus.Success:
+                    Profil(model);
                     return RedirectToLocal(returnUrl);
                 case SignInStatus.LockedOut:
                     return View("Lockout");
@@ -86,7 +107,7 @@ namespace Cubes.Web.Controllers
                     return RedirectToAction("SendCode", new { ReturnUrl = returnUrl, RememberMe = model.RememberMe });
                 case SignInStatus.Failure:
                 default:
-                    ModelState.AddModelError("", "Invalid login attempt.");
+                    ModelState.AddModelError("", "Email et/ou mot de passe incorrect.");
                     return View(model);
             }
         }
@@ -147,29 +168,98 @@ namespace Cubes.Web.Controllers
         [HttpPost]
         [AllowAnonymous]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Register(RegisterViewModel model)
+        public async Task<ActionResult> Register(RegisterUserView userView)
         {
             if (ModelState.IsValid)
             {
-                var user = new ApplicationUser { UserName = model.Email, Email = model.Email };
-                var result = await UserManager.CreateAsync(user, model.Password);
-                if (result.Succeeded)
-                {
-                    await SignInManager.SignInAsync(user, isPersistent:false, rememberBrowser:false);
-                    
-                    // For more information on how to enable account confirmation and password reset please visit https://go.microsoft.com/fwlink/?LinkID=320771
-                    // Send an email with this link
-                    // string code = await UserManager.GenerateEmailConfirmationTokenAsync(user.Id);
-                    // var callbackUrl = Url.Action("ConfirmEmail", "Account", new { userId = user.Id, code = code }, protocol: Request.Url.Scheme);
-                    // await UserManager.SendEmailAsync(user.Id, "Confirm your account", "Please confirm your account by clicking <a href=\"" + callbackUrl + "\">here</a>");
+                var pic = string.Empty;
+                var folder = "~/Content/Photos";
 
+                // Charger la photo
+                if (userView.PhotoFile != null)
+                {
+                    pic = FilesHelper.UploadPhoto(userView.PhotoFile, folder);
+                    pic = string.Format("{0}/{1}", folder, pic);
+                }
+                else
+                {
+                    pic = "~/Content/Photos/user_avatar.png";
+                }
+
+                var user = new User
+                {
+                    DateNaissance = userView.DateNaissance,
+                    Prenom = userView.Prenom,
+                    Nom = userView.Nom,
+                    Photo = string.IsNullOrEmpty(pic) ? string.Empty : string.Format("~/Content/Photos/{0}", pic),
+                    Email = userView.Email,
+                    IdUser = userView.IdUser,
+                    Telephone = userView.Telephone,
+                    DateInscription = DateTime.Now,
+                    IsActivated = true
+                };
+
+                var db = new DataContext();
+                user.Photo = pic;
+                db.Users.Add(user);
+
+                try
+                {
+                    await db.SaveChangesAsync();
+                    var userASP = this.CreateASPUser(userView);
+                    await SignInManager.SignInAsync(userASP, isPersistent: false, rememberBrowser: false);
                     return RedirectToAction("Index", "Home");
                 }
-                AddErrors(result);
+                catch (Exception ex)
+                {
+                    if (ex.InnerException != null &&
+                        ex.InnerException.InnerException != null &&
+                        ex.InnerException.InnerException.Message.Contains("Index_Email"))
+                    {
+                        ModelState.AddModelError(string.Empty, "Cet e-mail est déjà utilisé par un autre utilisateur !");
+                    }
+                    else
+                    {
+                        ModelState.AddModelError(string.Empty, ex.Message);
+                    }
+
+                    return View(userView);
+                }
             }
 
-            // If we got this far, something failed, redisplay form
-            return View(model);
+            // Si nous sommes arrivés si loin, quelque chose a échoué, réafficher le formulaire
+            return View(userView);
+        }
+
+        private ApplicationUser CreateASPUser(RegisterUserView userView)
+        {
+            // Gerer Utilisateur
+            var userContext = new ApplicationDbContext();
+            var userManager = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(userContext));
+            var roleManager = new RoleManager<IdentityRole>(new RoleStore<IdentityRole>(userContext));
+
+            // Créer le rôle de l'utilisateur
+            string roleName = "Utilisateur";
+
+            // On vérifie si le rôle existe, sinon on le crée
+            if (!roleManager.RoleExists(roleName))
+            {
+                roleManager.Create(new IdentityRole(roleName));
+            }
+
+            // Créer l'utilisateur ASP NET
+            var userASP = new ApplicationUser
+            {
+                UserName = userView.Email,
+                Email = userView.Email
+            };
+
+            userManager.Create(userASP, userView.Password);
+
+            // Ajoute le rôle de l'utilisateur
+            userASP = userManager.FindByName(userView.Email);
+            userManager.AddToRole(userASP.Id, "Utilisateur");
+            return userASP;
         }
 
         //
@@ -392,6 +482,8 @@ namespace Cubes.Web.Controllers
         public ActionResult LogOff()
         {
             AuthenticationManager.SignOut(DefaultAuthenticationTypes.ApplicationCookie);
+            Session["Photo"] = null;
+            Session["Prenom"] = null;
             return RedirectToAction("Index", "Home");
         }
 

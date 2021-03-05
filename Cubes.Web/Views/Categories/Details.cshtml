@@ -1,0 +1,25 @@
+﻿@model Cubes.Web.Models.Categorie
+
+@{
+    ViewBag.Title = "Détails";
+}
+
+<h2 class="text-center">Déails catégorie</h2>
+
+<div>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.Libelle)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Libelle)
+        </dd>
+
+    </dl>
+</div>
+<p>
+    @Html.ActionLink("Editer", "Edit", new { id = Model.IdCategorie }, new { @class = "btn btn-success" }) 
+    @Html.ActionLink("Revenir à la liste", "Index", new { }, new { @class = "btn btn-warning" })
+</p>

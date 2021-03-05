@@ -1,0 +1,94 @@
+﻿@model Cubes.Web.Models.User
+
+@{
+    ViewBag.Title = "Détails";
+}
+
+<h2 class="text-center">Infos de l'utilisateur</h2>
+<div class="row">
+    <div class="col-md-6">
+        <hr />
+        <dl class="dl-horizontal">
+
+            <dt>
+                @Html.DisplayNameFor(model => model.Nom)
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.Nom)
+            </dd>
+
+            <dt>
+                @Html.DisplayNameFor(model => model.Prenom)
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.Prenom)
+            </dd>
+            <dt>
+                @Html.DisplayNameFor(model => model.Email)
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.Email)
+            </dd>
+
+            <dt>
+                @Html.DisplayNameFor(model => model.DateNaissance)
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.DateNaissance)
+            </dd>
+
+            <dt>
+                @Html.DisplayNameFor(model => model.IsActivated)
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.IsActivated)
+            </dd>
+
+            <dt>
+                @Html.DisplayNameFor(model => model.DateInscription)
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.DateInscription)
+            </dd>
+
+            <dt>
+                @Html.DisplayNameFor(model => model.DateBannissement)
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.DateBannissement)
+            </dd>
+
+            <dt>
+                @Html.DisplayNameFor(model => model.DateFinBannissement)
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.DateFinBannissement)
+            </dd>
+        </dl>
+    </div>
+
+    <div class="col-md-6">
+        <hr />
+        <dl class="dl-horizontal">
+            <dd>
+                @if (!string.IsNullOrEmpty(Model.Photo))
+                {
+                    <img src="@Url.Content(Model.Photo)" alt="Photo de l'utiliisateur" style="width:250px;height:250px;max-width: 100%; height: auto;" />
+                }
+            </dd>
+
+        </dl>
+    </div>
+</div>
+<p>
+    @Html.ActionLink("Editer", "Edit", new { id = Model.IdUser }, new { @class = "btn btn-success" })
+    @Html.ActionLink("Revenir à la liste", "Index", new { }, new { @class = "btn btn-warning" })
+</p>

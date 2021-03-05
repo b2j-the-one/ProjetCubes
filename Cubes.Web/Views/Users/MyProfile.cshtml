@@ -1,0 +1,101 @@
+﻿@model Cubes.Web.Models.UserProfilView
+
+@{
+    ViewBag.Title = "Profil";
+}
+
+<br />
+<h3 class="text-center">Mes informations personnelles</h3>
+
+
+<div class="form-horizontal">
+    <div class="row">
+        <div class="col-md-9">
+            @using (Html.BeginForm("MyProfile", "Users", FormMethod.Post, new { enctype = "multipart/form-data" }))
+            {
+                @Html.AntiForgeryToken()
+
+                <div class="form-horizontal">
+                    <hr />
+                    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                    @Html.HiddenFor(model => model.IdUser)
+                    @Html.HiddenFor(model => model.Email)
+
+                    <br />
+                    <div class="row">
+                        <div class="col-md-8">
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.Email, htmlAttributes: new { @class = "control-label col-md-2" })
+                                <div class="col-md-10">
+                                    @Html.EditorFor(model => model.Email, new { htmlAttributes = new { @class = "form-control" } })
+                                    @Html.ValidationMessageFor(model => model.Email, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.Nom, htmlAttributes: new { @class = "control-label col-md-2" })
+                                <div class="col-md-10">
+                                    @Html.EditorFor(model => model.Nom, new { htmlAttributes = new { @class = "form-control" } })
+                                    @Html.ValidationMessageFor(model => model.Nom, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.Prenom, htmlAttributes: new { @class = "control-label col-md-2" })
+                                <div class="col-md-10">
+                                    @Html.EditorFor(model => model.Prenom, new { htmlAttributes = new { @class = "form-control" } })
+                                    @Html.ValidationMessageFor(model => model.Prenom, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.DateNaissance, htmlAttributes: new { @class = "control-label col-md-2" })
+                                <div class="col-md-10">
+                                    @Html.EditorFor(model => model.DateNaissance, new { htmlAttributes = new { @class = "form-control" } })
+                                    @Html.ValidationMessageFor(model => model.DateNaissance, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.Telephone, htmlAttributes: new { @class = "control-label col-md-2" })
+                                <div class="col-md-10">
+                                    @Html.EditorFor(model => model.Telephone, new { htmlAttributes = new { @class = "form-control" } })
+                                    @Html.ValidationMessageFor(model => model.Telephone, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <div class="col-md-offset-2 col-md-10">
+                                    <input type="submit" value="Enregistrer" class="btn btn-primary" />
+                                    @Html.ActionLink("Modifier votre mot de passe", "ChangePassword", "Manage", new { }, new { @class = "btn btn-warning" })
+                                    @Html.ActionLink("Revenir à l'accueil", "Index", "Home", new { }, new { @class = "btn btn-info" })
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+
+        <div class="col-md-3">
+            <br /><br />
+            @if (!string.IsNullOrEmpty(Model.Photo))
+            {
+                <img src="@Url.Content(Model.Photo)" alt="Photo de profil" style="width:250px;height:250px;max-width: 100%; height: auto;" /><br />
+
+                @*@Html.ActionLink("Changer votre photo de profil", "ChangePhoto", "Users", new { }, new { @class = "btn btn-success" })*@
+            }
+            <br />
+            <div class="form-group">
+                <div class="col-md-offset-2 col-md-10">
+                    <a href='@Url.Action("ChangePhoto", "Users", new { })' class="btn btn-primary" data-toggle="tooltip" title="Modifier votre photo de profil"><i class="glyphicon glyphicon-image"></i> Modifier</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}
+

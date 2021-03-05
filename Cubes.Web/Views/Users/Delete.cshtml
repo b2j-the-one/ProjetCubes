@@ -1,0 +1,77 @@
+﻿@model Cubes.Web.Models.User
+
+@{
+    ViewBag.Title = "Suppréssion";
+}
+
+<h2 class="text-center">Supprimer la catégorie</h2>
+
+<h4>Souhaitez-vous vraiment supprimer cet utilisateur?</h4>
+<div class="row">
+    <div class="col-md-6">
+        <hr />
+        <dl class="dl-horizontal">
+            <dt>
+                @Html.DisplayNameFor(model => model.Nom)
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.Nom)
+            </dd>
+
+            <dt>
+                @Html.DisplayNameFor(model => model.Prenom)
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.Prenom)
+            </dd>
+
+            <dt>
+                @Html.DisplayNameFor(model => model.Email)
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.Email)
+            </dd>
+
+            <dt>
+                @Html.DisplayNameFor(model => model.DateNaissance)
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.DateNaissance)
+            </dd>
+
+            <dt>
+                @Html.DisplayNameFor(model => model.IsActivated)
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.IsActivated)
+            </dd>
+        </dl>
+    </div>
+    <div class="col-md-6">
+        <hr />
+        <dl class="dl-horizontal">
+            <dd>
+                @if (!string.IsNullOrEmpty(Model.Photo))
+                {
+                    <img src="@Url.Content(Model.Photo)" alt="Photo de l'utiliisateur" style="width:250px;height:250px;max-width: 100%; height: auto;" />
+                }
+            </dd>
+
+        </dl>
+    </div>
+</div>
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+
+    <div class="form-actions no-color">
+        <input type="submit" value="Supprimer" class="btn btn-primary" />
+        @Html.ActionLink("Revenir à la liste", "Index", new { }, new { @class = "btn btn-warning" })
+    </div>
+}
