@@ -13,7 +13,9 @@ namespace Cubes.Web.Models
 
         [Required(ErrorMessage = "Ce champ est obligatoire")]
         [StringLength(50, ErrorMessage = "Ce champ doit contenir au maximum {1} caractères et au minimum {2}", MinimumLength = 3)]
-        [Display(Name = "Libéllé")]
+        [Display(Name = "Catégorie")]
         public string Libelle { get; set; }
+
+        public virtual ICollection<Ressource> Ressources { get; set; }
     }
 }

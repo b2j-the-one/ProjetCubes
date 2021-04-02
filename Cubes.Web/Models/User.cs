@@ -14,7 +14,7 @@ namespace Cubes.Web.Models
 
         [Required(ErrorMessage = "Ce champ est obligatoire")]
         [StringLength(100, ErrorMessage = "Ce champ doit contenir au maximum {1} caractères et au minimum {2}", MinimumLength = 7)]
-        [DataType(DataType.EmailAddress)]
+        [DataType(DataType.EmailAddress, ErrorMessage = "Veuillez saisir une adresse mail valide")]
         [Index("Index_Email", IsUnique = true)]
         public string Email { get; set; }
 

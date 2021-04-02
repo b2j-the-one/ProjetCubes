@@ -4,8 +4,10 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>@ViewBag.Title - PROJET CUBES</title>
-    @Styles.Render("~/Content/css")
-    @Scripts.Render("~/bundles/modernizr")
+    <link href="~/Content/Site.css" rel="stylesheet" type="text/css" />
+    <link href="~/Content/bootstrap.min.css" rel="stylesheet" type="text/css" />
+    @*@Styles.Render("~/Content/css")*@
+    @*@Scripts.Render("~/bundles/modernizr")*@
 
 </head>
 <body>
@@ -23,45 +25,47 @@
                 <ul class="nav navbar-nav">
                     <li>@Html.ActionLink("Accueil", "Index", "Home")</li>
                     @*<li>@Html.ActionLink("A propos", "About", "Home")</li>
-                    <li>@Html.ActionLink("Contact", "Contact", "Home")</li>*@
+                        <li>@Html.ActionLink("Nous contacter", "Contact", "Home")</li>*@
 
-                    @if (this.User.IsInRole("Administrateur"))
+                    @if (this.User.IsInRole("SuperAdmin"))
                     {
-                        <li class="dropdown">
-                            <a href="#" class="dropdown-toggle" data-toggle="dropdown">Options Administrateur<b class="caret"></b></a>
-                            <ul class="dropdown-menu">
-                                <li>@Html.ActionLink("Utilisateurs", "Index", "Users")</li>
-                                <li>@Html.ActionLink("Catégories", "Index", "Categories")</li>
-                                <li>@Html.ActionLink("Publications", "Index", "Publications")</li>
-                            </ul>
-                        </li>
-                        <li class="dropdown">
-                            <a href="#" class="dropdown-toggle" data-toggle="dropdown">Options Modérateur<b class="caret"></b></a>
-                            <ul class="dropdown-menu">
-                                <li>@Html.ActionLink("Catégories", "Index", "Categories")</li>
-                                <li>@Html.ActionLink("Publications", "Index", "Publications")</li>
-                            </ul>
-                        </li>
-                        <li class="dropdown">
-                            <a href="#" class="dropdown-toggle" data-toggle="dropdown">Options Utilisateur<b class="caret"></b></a>
-                            <ul class="dropdown-menu">
-                                <li>@Html.ActionLink("Mon profil", "MyProfile", "Users")</li>
-                                <li>@Html.ActionLink("Mes publications", "MyPublish", "Publications")</li>
-                            </ul>
-                        </li>
+                        <li>@Html.ActionLink("Utilisateurs", "Index", "Users")</li>
+                        <li>@Html.ActionLink("Catégories", "Index", "Categories")</li>
+                        <li>@Html.ActionLink("Ressources", "Index", "Ressources")</li>
+                        <li>@Html.ActionLink("Publications", "Index", "Publications")</li>
+                        <li>@Html.ActionLink("Profil", "MyProfile", "Users")</li>
+                        @*<li class="dropdown">
+                                <a href="#" class="dropdown-toggle" data-toggle="dropdown">Options Administrateur<b class="caret"></b></a>
+                                <ul class="dropdown-menu">
+                                    <li>@Html.ActionLink("Utilisateurs", "Index", "Users")</li>
+                                    <li>@Html.ActionLink("Catégories", "Index", "Categories")</li>
+                                    <li>@Html.ActionLink("Mon profil", "MyProfile", "Users")</li>
+                                    <li>@Html.ActionLink("Publications", "Index", "Publications")</li>
+                                </ul>
+                            </li>*@
+
+                    }
+
+                    @if (this.User.IsInRole("Admin"))
+                    {
+                        <li>@Html.ActionLink("Utilisateurs", "Index", "Users")</li>
+                        <li>@Html.ActionLink("Catégories", "Index", "Categories")</li>
+                        <li>@Html.ActionLink("Ressources", "Index", "Ressources")</li>
+                        <li>@Html.ActionLink("Publications", "Index", "Publications")</li>
+                        <li>@Html.ActionLink("Profil", "MyProfile", "Users")</li>
                     }
 
                     @if (this.User.IsInRole("Moderateur"))
                     {
-                        <li>@Html.ActionLink("Catégories", "Index", "Categories")</li>
+                        <li>@Html.ActionLink("Mon profil", "MyProfile", "Users")</li>
                         <li>@Html.ActionLink("Publications", "Index", "Publications")</li>
                     }
 
-                    @if (this.User.IsInRole("Utilisateur"))
+                    @if (this.User.IsInRole("Citoyen"))
                     {
                         <li>@Html.ActionLink("Mon profil", "MyProfile", "Users")</li>
-                        <li>@Html.ActionLink("Mes publications", "MyPublish", "Publications")</li>
-                        <li>@Html.ActionLink("Mes favoris", "MyFavorites", "Publications")</li>
+                        <li>@Html.ActionLink("Mes publications", "", "Publications")</li>
+                        <li>@Html.ActionLink("Mes favoris", "", "Publications")</li>
                     }
                 </ul>
                 @Html.Partial("_LoginPartial")
@@ -76,8 +80,10 @@
         </footer>
     </div>
 
-    @Scripts.Render("~/bundles/jquery")
-    @Scripts.Render("~/bundles/bootstrap")
+    <script src="~/Scripts/jquery-3.4.1.min.js"></script>
+    <script src="~/Scripts/bootstrap.min.js"></script>
+    @*@Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/bootstrap")*@
     @RenderSection("scripts", required: false)
 </body>
 </html>

@@ -184,6 +184,7 @@
     <Compile Include="Controllers\CategoriesController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
+    <Compile Include="Controllers\RessourcesController.cs" />
     <Compile Include="Controllers\UsersController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
@@ -204,7 +205,10 @@
     <Compile Include="Models\DataContext.cs" />
     <Compile Include="Models\IdentityModels.cs" />
     <Compile Include="Models\ManageViewModels.cs" />
+    <Compile Include="Models\Publication.cs" />
     <Compile Include="Models\RegisterUserView.cs" />
+    <Compile Include="Models\Ressource.cs" />
+    <Compile Include="Models\RessourceView.cs" />
     <Compile Include="Models\User.cs" />
     <Compile Include="Models\UserChange.cs" />
     <Compile Include="Models\UserIndexView.cs" />
@@ -219,12 +223,14 @@
     <Content Include="Content\bootstrap-theme.min.css" />
     <Content Include="Content\bootstrap.css" />
     <Content Include="Content\bootstrap.min.css" />
-    <Content Include="Content\Photos\user_11.jfif" />
-    <Content Include="Content\Photos\user_12.jfif" />
-    <Content Include="Content\Photos\user_14.png" />
-    <Content Include="Content\Photos\user_7.png" />
-    <Content Include="Content\Photos\user_9.jfif" />
-    <Content Include="Content\Photos\user_avatar.png" />
+    <Content Include="Content\Files\icons8-microsoft-excel-2019-64.png" />
+    <Content Include="Content\Files\icons8-microsoft-powerpoint-2019-64.png" />
+    <Content Include="Content\Files\icons8-microsoft-word-2019-64.png" />
+    <Content Include="Content\Files\icons8-pdf.png" />
+    <Content Include="Content\Files\icons8-pdf-64.png" />
+    <Content Include="Content\Files\noimage.png" />
+    <Content Include="Content\Files\user1.png" />
+    <Content Include="Content\Files\user_avatar.png" />
     <Content Include="favicon.ico" />
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />
@@ -288,6 +294,11 @@
     <Content Include="Views\Users\Index.cshtml" />
     <Content Include="Views\Users\MyProfile.cshtml" />
     <Content Include="Views\Users\ChangePhoto.cshtml" />
+    <Content Include="Views\Ressources\Create.cshtml" />
+    <Content Include="Views\Ressources\Delete.cshtml" />
+    <Content Include="Views\Ressources\Details.cshtml" />
+    <Content Include="Views\Ressources\Edit.cshtml" />
+    <Content Include="Views\Ressources\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

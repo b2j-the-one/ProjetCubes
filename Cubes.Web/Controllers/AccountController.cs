@@ -173,17 +173,17 @@ namespace Cubes.Web.Controllers
             if (ModelState.IsValid)
             {
                 var pic = string.Empty;
-                var folder = "~/Content/Photos";
+                var folder = "~/Content/Files";
 
                 // Charger la photo
                 if (userView.PhotoFile != null)
                 {
-                    pic = FilesHelper.UploadPhoto(userView.PhotoFile, folder);
+                    pic = FilesHelper.UploadFile(userView.PhotoFile, folder);
                     pic = string.Format("{0}/{1}", folder, pic);
                 }
                 else
                 {
-                    pic = "~/Content/Photos/user_avatar.png";
+                    pic = "~/Content/Files/user_avatar.png";
                 }
 
                 var user = new User
@@ -191,7 +191,7 @@ namespace Cubes.Web.Controllers
                     DateNaissance = userView.DateNaissance,
                     Prenom = userView.Prenom,
                     Nom = userView.Nom,
-                    Photo = string.IsNullOrEmpty(pic) ? string.Empty : string.Format("~/Content/Photos/{0}", pic),
+                    Photo = string.IsNullOrEmpty(pic) ? string.Empty : string.Format("~/Content/Files/{0}", pic),
                     Email = userView.Email,
                     IdUser = userView.IdUser,
                     Telephone = userView.Telephone,
@@ -239,7 +239,7 @@ namespace Cubes.Web.Controllers
             var roleManager = new RoleManager<IdentityRole>(new RoleStore<IdentityRole>(userContext));
 
             // Créer le rôle de l'utilisateur
-            string roleName = "Utilisateur";
+            string roleName = "Citoyen";
 
             // On vérifie si le rôle existe, sinon on le crée
             if (!roleManager.RoleExists(roleName))
@@ -258,7 +258,7 @@ namespace Cubes.Web.Controllers
 
             // Ajoute le rôle de l'utilisateur
             userASP = userManager.FindByName(userView.Email);
-            userManager.AddToRole(userASP.Id, "Utilisateur");
+            userManager.AddToRole(userASP.Id, "Citoyen");
             return userASP;
         }
 

@@ -21,8 +21,8 @@ namespace Cubes.Web.Helpers
             return userASP;
         }
 
-        // Télécharger photo
-        public static string UploadPhoto(HttpPostedFileBase file, string folder)
+        // Télécharger fichier
+        public static string UploadFile(HttpPostedFileBase file, string folder)
         {
             string path = string.Empty;
             string pic = string.Empty;
@@ -42,6 +42,18 @@ namespace Cubes.Web.Helpers
             return pic;
         }
 
+        // Télécharger fichier
+        //public static string UploadFie(HttpPostedFileBase file)
+        //{
+        //    string path = HttpContext.Current.Server.MapPath("~/Content/Files");
+        //    string fileName = Path.GetFileName(file.FileName);
+
+        //    string fullPath = Path.Combine(path, fileName);
+        //    file.SaveAs(fullPath);
+
+        //    return pic;
+        //}
+
         // Créer utilisateur ASP
         public static void CreateASPUser(UserView userView)
         {
@@ -50,7 +62,7 @@ namespace Cubes.Web.Helpers
             var roleManager = new RoleManager<IdentityRole>(new RoleStore<IdentityRole>(userContext));
 
             // Créer le rôle de l'utilisateur
-            string roleName = "Utilisateur";
+            string roleName = "Citoyen";
 
             // Vérifie si le rôle existe, sinon on le crée
             if (!roleManager.RoleExists(roleName))
@@ -69,7 +81,7 @@ namespace Cubes.Web.Helpers
 
             // Ajoute le rôle de l'utilisateur
             userASP = userManager.FindByName(userView.Email);
-            userManager.AddToRole(userASP.Id, "Utilisateur");
+            userManager.AddToRole(userASP.Id, "Citoyen");
         }
 
         // Modifier son compte
@@ -93,7 +105,7 @@ namespace Cubes.Web.Helpers
             };
 
             userManager.Create(userASP, user.CurrentPassword);
-            userManager.AddToRole(userASP.Id, "Utilisateur");
+            userManager.AddToRole(userASP.Id, "Citoyen");
         }
 
         public void Dispose()

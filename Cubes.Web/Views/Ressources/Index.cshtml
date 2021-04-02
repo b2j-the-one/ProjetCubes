@@ -1,0 +1,168 @@
+﻿@model IEnumerable<Cubes.Web.Models.Ressource>
+
+@{
+    ViewBag.Title = "Ressources";
+}
+
+<br />
+<br />
+<h2 class="text-center">Liste des ressources</h2>
+
+<p>
+    <a href='@Url.Action("Create", "Ressources")' class="btn btn-primary"><i class="glyphicon glyphicon-plus"></i> Nouveau</a>
+</p>
+<table class="table table-striped table-bordered" id="ressourceTable">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.Categorie.Libelle)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Nom)
+        </th>
+        @*<th>
+                @Html.DisplayNameFor(model => model.Titre)
+            </th>*@
+        <th>
+            @Html.DisplayNameFor(model => model.IsPrivate)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.IsValid)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.IsPublish)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Fichier)
+        </th>
+        <th class="text-center">Actions</th>
+    </tr>
+
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Categorie.Libelle)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Nom)
+            </td>
+            @*<td>
+                    @Html.DisplayFor(modelItem => item.Titre)
+                </td>*@
+            <td>
+                @Html.DisplayFor(modelItem => item.IsPrivate)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.IsValid)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.IsPublish)
+            </td>
+            <td>
+                @if (!string.IsNullOrEmpty(item.Fichier))
+                {
+                    if (item.Fichier.Contains(".jpg") || item.Fichier.Contains(".png") || item.Fichier.Contains(".gif") || item.Fichier.Contains(".tiff"))
+                    {
+                        <img src="@Url.Content(item.Fichier)" alt="Fichier joint" style="width:100px;height:100px;max-width: 100%; height: auto;" />
+                    }
+                    else if (item.Fichier.Contains(".mp4"))
+                    {
+                        <div class="video-frame">
+                            <video style="width:100px; height:100px" controls>
+                                <source src="@Url.Content(item.Fichier)" type="video/mp4" au autstart="true" loop="false" runat="server" style="border: gray 1px solid" />
+                            </video>
+                        </div>
+                    }
+                    else if (item.Fichier.Contains(".avi"))
+                    {
+                        <div class="video-frame">
+                            <video style="width:100px; height:100px" controls>
+                                <source src="@Url.Content(item.Fichier)" type="video/avi" autstart="true" loop="false" runat="server" style="border: gray 1px solid" />
+                            </video>
+                        </div>
+                    }
+                    else if (item.Fichier.Contains(".webm"))
+                    {
+                        <div class="video-frame">
+                            <video style="width:100px; height:100px" controls>
+                                <source src="@Url.Content(item.Fichier)" type="video/webm" autstart="true" loop="false" runat="server" style="border: gray 1px solid" />
+                            </video>
+                        </div>
+                    }
+                    else if (item.Fichier.Contains(".mp3"))
+                    {
+                        <div class="audio-frame">
+                            <audio style="width:100px; height:100px" controls>
+                                <source src="@Url.Content(item.Fichier)" type="audio/mp3" autstart="true" loop="false" runat="server" style="border: gray 1px solid" />
+                            </audio>
+                        </div>
+                    }
+                    else if (item.Fichier.Contains(".aac"))
+                    {
+                        <div class="audio-frame">
+                            <audio style="width:100px; height:100px" controls>
+                                <source src="@Url.Content(item.Fichier)" type="audio/aac" autstart="true" loop="false" runat="server" style="border: gray 1px solid" />
+                            </audio>
+                        </div>
+                    }
+                    else if (item.Fichier.Contains(".mp4"))
+                    {
+                        <div class="audio-frame">
+                            <audio style="width:100px; height:100px" controls>
+                                <source src="@Url.Content(item.Fichier)" type="audio/mp4" autstart="true" loop="false" runat="server" style="border: gray 1px solid" />
+                            </audio>
+                        </div>
+                    }
+                    else if (item.Fichier.Contains(".pdf"))
+                    {
+                        <p style="width:100px;height:100px;"><a href="@Url.Content(item.Fichier)" target="_blank"><img src="~/Content/Files/icons8-pdf-64.png" />Ouvrir le fichier</a></p>
+                        @*<p style="width:100px;height:100px;"><a href="@Url.Content(item.Fichier)" target="_blank"><img src="~/Content/Files/icons8-pdf.png" /></a></p>*@
+                    }
+                    else if (item.Fichier.Contains(".docx"))
+                    {
+                        <p style="width:100px;height:100px;"><a href="@Url.Content(item.Fichier)" target="_blank"><img src="~/Content/Files/icons8-microsoft-word-2019-64.png" />Ouvrir le fichier</a></p>
+                    }
+                    else if (item.Fichier.Contains(".xls") || item.Fichier.Contains(".xlsx"))
+                    {
+                        <p style="width:100px;height:100px;"><a href="@Url.Content(item.Fichier)" target="_blank"><img src="~/Content/Files/icons8-microsoft-excel-2019-64.png" />Ouvrir le fichier</a></p>
+                    }
+                    else if (item.Fichier.Contains(".pptx"))
+                    {
+                        <p style="width:100px;height:100px;"><a href="@Url.Content(item.Fichier)" target="_blank"><img src="~/Content/Files/icons8-microsoft-powerpoint-2019-64.png" />Ouvrir le fichier</a></p>
+                    }
+
+                }
+            </td>
+            <td>
+                <a href='@Url.Action("Edit", "Ressources", new { id = item.Id })' class="btn btn-success" data-toggle="tooltip" title="Editer la ressource"><i class="glyphicon glyphicon-pencil"></i> </a>
+                <a href='@Url.Action("Details", "Ressources", new { id = item.Id })' class="btn btn-warning" data-toggle="tooltip" title="Voir les détails de la ressource"><i class="glyphicon glyphicon-eye-open"></i> </a>
+                <a href='@Url.Action("", "Ressources", new { id = item.Id })' class="btn btn-info" data-toggle="tooltip" title="Publier la ressource" onclick="return confirm('Etes-vous sûr de vouloir publier cette ressource ?')"><i class="glyphicon glyphicon-off"></i> </a>
+                <a href='@Url.Action("Delete", "Ressources", new { id = item.Id })' class="btn btn-danger" data-toggle="tooltip" title="Supprimer la ressource" onclick="return confirm('Etes-vous sûr de vouloir supprimer cette ressource ?')"><i class="glyphicon glyphicon-trash"></i> </a>
+            </td>
+        </tr>
+    }
+
+</table>
+
+<link href="https://cdn.datatables.net/1.10.24/css/jquery.dataTables.min.css" rel="stylesheet" />
+
+@section scripts{
+
+    <script src="https://cdn.datatables.net/1.10.24/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.10.24/js/dataTables.bootstrap.min.js"></script>
+
+    <script>
+        $(document).ready(function () {
+            $('#ressourceTable').DataTable({
+                //"ajax": {
+                //    "url": "/Ressources/Index",
+                //    "type": "GET",
+                //    "datatype": "json"
+                //},
+                "language": {
+                    "url": "//cdn.datatables.net/plug-ins/1.10.24/i18n/French.json"
+                }
+            });
+        });
+    </script>
+}

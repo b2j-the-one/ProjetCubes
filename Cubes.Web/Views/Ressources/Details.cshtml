@@ -1,0 +1,90 @@
+﻿@model Cubes.Web.Models.Ressource
+
+@{
+    ViewBag.Title = "Details";
+}
+
+<h2>Details</h2>
+
+<div>
+    <h4>Ressource</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.Categorie.Libelle)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Categorie.Libelle)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Nom)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Nom)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Titre)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Titre)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.IsPrivate)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.IsPrivate)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.IsValid)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.IsValid)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.IsPublish)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.IsPublish)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.IsFavorite)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.IsFavorite)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Fichier)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Fichier)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Description)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Description)
+        </dd>
+
+    </dl>
+</div>
+<p>
+    @Html.ActionLink("Edit", "Edit", new { id = Model.Id }) |
+    @Html.ActionLink("Back to List", "Index")
+</p>

@@ -31,9 +31,10 @@ namespace Cubes.Web
             var userContext = new ApplicationDbContext();
             var userManager = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(userContext));
 
-            this.VerifierRole("Administrateur", userContext);
+            this.VerifierRole("SuperAdmin", userContext);
+            this.VerifierRole("Admin", userContext);
             this.VerifierRole("Moderateur", userContext);
-            this.VerifierRole("Utilisateur", userContext);
+            this.VerifierRole("Citoyen", userContext);
 
             // on définit l'administrateur
             var user = db.Users.Where(u => u.Email.ToLower().Equals("borjessatwood@gmail.com")).FirstOrDefault();
@@ -49,10 +50,10 @@ namespace Cubes.Web
                     DateInscription = DateTime.Now,
                     IsActivated = true,
                     Telephone = string.Empty,
-                    Photo = "~/Content/Photos/user_avatar.png"
+                    Photo = "~/Content/Files/user1.png"
                 };
 
-                // on ajoute l'utilisateur dans la BDD
+                // on créé l'utilisateur dans la BDD
                 db.Users.Add(user);
                 db.SaveChanges();
             }
@@ -70,7 +71,7 @@ namespace Cubes.Web
                 userManager.Create(userASP, "123456");
             }
 
-            userManager.AddToRole(userASP.Id, "Administrateur");
+            userManager.AddToRole(userASP.Id, "SuperAdmin");
         }
 
         private void VerifierRole(string roleName, ApplicationDbContext userContext)

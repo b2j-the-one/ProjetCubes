@@ -17,8 +17,37 @@ namespace Cubes.Web.Controllers
     {
         private DataContext db = new DataContext();
 
+        // Définir comme Super Administrateur
+        [Authorize(Roles = "SuperAdmin")]
+        public async Task<ActionResult> OnOffSuperAdmin(int id)
+        {
+            var user = await db.Users.FindAsync(id);
+
+            if (user != null)
+            {
+                var userContext = new ApplicationDbContext();
+                var userManager = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(userContext));
+                var userASP = await userManager.FindByEmailAsync(user.Email);
+
+                if (userASP != null)
+                {
+                    if (userManager.IsInRole(userASP.Id, "SuperAdmin"))
+                    {
+                        userManager.RemoveFromRole(userASP.Id, "SuperAdmin");
+                        userManager.AddToRole(userASP.Id, "Citoyen");
+                    }
+                    else
+                    {
+                        userManager.AddToRole(userASP.Id, "SuperAdmin");
+                    }
+                }
+            }
+
+            return RedirectToAction("Index");
+        }
+
         // Définir comme Administrateur
-        [Authorize(Roles = "Administrateur")]
+        [Authorize(Roles = "SuperAdmin")]
         public async Task<ActionResult> OnOffAdmin(int id)
         {
             var user = await db.Users.FindAsync(id);
@@ -31,24 +60,23 @@ namespace Cubes.Web.Controllers
 
                 if (userASP != null)
                 {
-                    if (userManager.IsInRole(userASP.Id, "Administrateur"))
+                    if (userManager.IsInRole(userASP.Id, "Admin"))
                     {
-                        userManager.RemoveFromRole(userASP.Id, "Administrateur");
-                        userManager.AddToRole(userASP.Id, "Utilisateur");
+                        userManager.RemoveFromRole(userASP.Id, "Admin");
+                        userManager.AddToRole(userASP.Id, "Citoyen");
                     }
                     else
                     {
-                        userManager.AddToRole(userASP.Id, "Administrateur");
+                        userManager.AddToRole(userASP.Id, "Admin");
                     }
                 }
-
             }
 
             return RedirectToAction("Index");
         }
 
         // Définir comme Modérateur
-        [Authorize(Roles = "Administrateur")]
+        [Authorize(Roles = "SuperAdmin")]
         public async Task<ActionResult> OnOffModerator(int id)
         {
             var user = await db.Users.FindAsync(id);
@@ -64,22 +92,21 @@ namespace Cubes.Web.Controllers
                     if (userManager.IsInRole(userASP.Id, "Moderateur"))
                     {
                         userManager.RemoveFromRole(userASP.Id, "Moderateur");
-                        userManager.AddToRole(userASP.Id, "Utilisateur");
+                        userManager.AddToRole(userASP.Id, "Citoyen");
                     }
                     else
                     {
                         userManager.AddToRole(userASP.Id, "Moderateur");
                     }
                 }
-
             }
 
             return RedirectToAction("Index");
         }
 
-        // Activer/Désactiver utilisateur
-        [Authorize(Roles = "Administrateur")]
-        public async Task<ActionResult> OnOffUserAccount(int id)
+        // Activer/Désactiver un compte
+        [Authorize(Roles = "Admin")]
+        public async Task<ActionResult> ActivateUserAccount(int id)
         {
             var user = await db.Users.FindAsync(id);
 
@@ -107,7 +134,7 @@ namespace Cubes.Web.Controllers
         }
 
         // Changer photo utilisateur
-        [Authorize(Roles = "Administrateur, Moderateur, Utilisateur")]
+        [Authorize(Roles = "SuperAdmin, Admin, Moderateur, Citoyen")]
         public async Task<ActionResult> ChangePhoto()
         {
             // On trouve l'utilisateur concerné
@@ -133,17 +160,17 @@ namespace Cubes.Web.Controllers
         public async Task<ActionResult> ChangePhoto(UserProfilView view)
         {
             var pic = string.Empty;
-            var folder = "~/Content/Photos";
+            var folder = "~/Content/Files";
 
             // Charger la photo
             if (view.NewPhoto != null)
             {
-                pic = FilesHelper.UploadPhoto(view.NewPhoto, folder);
+                pic = FilesHelper.UploadFile(view.NewPhoto, folder);
                 pic = string.Format("{0}/{1}", folder, pic);
             }
             else
             {
-                pic = "~/Content/Photos/user_avatar.png";
+                pic = "~/Content/Files/user_avatar.png";
             }
 
             var user = new User
@@ -166,7 +193,7 @@ namespace Cubes.Web.Controllers
         }
 
         // Profil utilisateur
-        [Authorize(Roles = "Administrateur, Moderateur, Utilisateur")]
+        [Authorize(Roles = "SuperAdmin, Admin, Moderateur, Citoyen")]
         public async Task<ActionResult> MyProfile()
         {
             // On trouve l'utilisateur concerné
@@ -192,17 +219,17 @@ namespace Cubes.Web.Controllers
             if (ModelState.IsValid)
             {
                 var pic = string.Empty;
-                var folder = "~/Content/Photos";
+                var folder = "~/Content/Files";
 
                 // Charger la photo
                 if (view.NewPhoto != null)
                 {
-                    pic = FilesHelper.UploadPhoto(view.NewPhoto, folder);
+                    pic = FilesHelper.UploadFile(view.NewPhoto, folder);
                     pic = string.Format("{0}/{1}", folder, pic);
                 }
                 else
                 {
-                    pic = "~/Content/Photos/user_avatar.png";
+                    pic = "~/Content/Files/user_avatar.png";
                 }
 
                 var user = new User
@@ -228,7 +255,7 @@ namespace Cubes.Web.Controllers
         }
 
         // Liste des utilisateurs
-        [Authorize(Roles = "Administrateur, Moderateur")]
+        [Authorize(Roles = "SuperAdmin, Admin")]
         public async Task<ActionResult> Index()
         {
             var userContext = new ApplicationDbContext();
@@ -246,7 +273,8 @@ namespace Cubes.Web.Controllers
                     Photo = user.Photo,
                     Nom = user.Nom,
                     Prenom = user.Prenom,
-                    IsAdmin = userASP != null && userManager.IsInRole(userASP.Id, "Administrateur"),
+                    IsAdmin = userASP != null && userManager.IsInRole(userASP.Id, "Admin"),
+                    IsSuperAdmin = userASP != null && userManager.IsInRole(userASP.Id, "SuperAdmin"),
                     IsModerator = userASP != null && userManager.IsInRole(userASP.Id, "Moderateur"),
                     Email = user.Email,
                     DateNaissance = user.DateNaissance,
@@ -259,7 +287,7 @@ namespace Cubes.Web.Controllers
         }
 
         // Infos de l'utilisateur
-        [Authorize(Roles = "Administrateur, Moderateur")]
+        [Authorize(Roles = "SuperAdmin")]
         public async Task<ActionResult> Details(int? id)
         {
             if (id == null)
@@ -277,7 +305,7 @@ namespace Cubes.Web.Controllers
         }
 
         // créer user
-        [Authorize(Roles = "Administrateur")]
+        [Authorize(Roles = "SuperAdmin")]
         public ActionResult Create()
         {
             return View();
@@ -291,17 +319,17 @@ namespace Cubes.Web.Controllers
             if (ModelState.IsValid)
             {
                 var pic = string.Empty;
-                var folder = "~/Content/Photos";
+                var folder = "~/Content/Files";
 
                 // Charger la photo
                 if (userView.PhotoFile != null)
                 {
-                    pic = FilesHelper.UploadPhoto(userView.PhotoFile, folder);
+                    pic = FilesHelper.UploadFile(userView.PhotoFile, folder);
                     pic = string.Format("{0}/{1}", folder, pic);
                 }
                 else
                 {
-                    pic = "~/Content/Photos/user_avatar.png";
+                    pic = "~/Content/Files/user_avatar.png";
                 }
 
                 var user = ToUser(userView);
@@ -335,6 +363,22 @@ namespace Cubes.Web.Controllers
             return View(userView);
         }
 
+        private User ToUser(UserView userView)
+        {
+            return new User
+            {
+                IdUser = userView.IdUser,
+                Email = userView.Email,
+                Nom = userView.Nom,
+                Prenom = userView.Prenom,
+                DateNaissance = userView.DateNaissance,
+                IsActivated = true,
+                Photo = userView.Photo,
+                DateInscription = DateTime.Now,
+                Telephone = userView.Telephone
+            };
+        }
+
         private void CreateASPUser(UserView userView)
         {
             // Gerer Utilisateur
@@ -343,7 +387,7 @@ namespace Cubes.Web.Controllers
             var roleManager = new RoleManager<IdentityRole>(new RoleStore<IdentityRole>(userContext));
 
             // Créer le rôle de l'utilisateur
-            string roleName = "Utilisateur";
+            string roleName = "Citoyen";
 
             // Vérifie si le rôle existe, sinon on le crée
             if (!roleManager.RoleExists(roleName))
@@ -363,42 +407,11 @@ namespace Cubes.Web.Controllers
 
             // Ajoute le rôle de l'utilisateur
             userASP = userManager.FindByName(userView.Email);
-            userManager.AddToRole(userASP.Id, "Utilisateur");
-        }
-
-        private User ToUser(UserView userView)
-        {
-            return new User
-            {
-                IdUser = userView.IdUser,
-                Email = userView.Email,
-                Nom = userView.Nom,
-                Prenom = userView.Prenom,
-                DateNaissance = userView.DateNaissance,
-                IsActivated = true,
-                Photo = userView.Photo,
-                DateInscription = DateTime.Now,
-                Telephone = userView.Telephone
-            };
-        }
-
-        private User ToUser1(UserView userView)
-        {
-            return new User
-            {
-                IdUser = userView.IdUser,
-                Email = userView.Email,
-                Nom = userView.Nom,
-                Prenom = userView.Prenom,
-                DateNaissance = userView.DateNaissance,
-                IsActivated = userView.IsActivated,
-                Photo = userView.Photo,
-                Telephone = userView.Telephone
-            };
+            userManager.AddToRole(userASP.Id, "Citoyen");
         }
 
         // editer user
-        [Authorize(Roles = "Administrateur, Moderateur")]
+        [Authorize(Roles = "SuperAdmin")]
         public async Task<ActionResult> Edit(int? id)
         {
             if (id == null)
@@ -441,16 +454,16 @@ namespace Cubes.Web.Controllers
             if (ModelState.IsValid)
             {
                 var pic = userView.Photo;
-                var folder = "~/Content/Photos";
+                var folder = "~/Content/Files";
 
                 if (userView.PhotoFile != null)
                 {
-                    pic = FilesHelper.UploadPhoto(userView.PhotoFile, folder);
+                    pic = FilesHelper.UploadFile(userView.PhotoFile, folder);
                     pic = string.Format("{0}/{1}", folder, pic);
                 }
                 else
                 {
-                    pic = "~/Content/Photos/user_avatar.png";
+                    pic = "~/Content/Files/user_avatar.png";
                 }
 
                 var user = ToUser1(userView);
@@ -464,28 +477,48 @@ namespace Cubes.Web.Controllers
             return View(userView);
         }
 
-        // supprimer user
-        [Authorize(Roles = "Administrateur, Moderateur")]
-        public async Task<ActionResult> Delete(int? id)
+        private User ToUser1(UserView userView)
         {
-            if (id == null)
+            return new User
             {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
+                IdUser = userView.IdUser,
+                Email = userView.Email,
+                Nom = userView.Nom,
+                Prenom = userView.Prenom,
+                DateNaissance = userView.DateNaissance,
+                IsActivated = userView.IsActivated,
+                Photo = userView.Photo,
+                Telephone = userView.Telephone
+            };
+        }
+
+        // supprimer user
+        [Authorize(Roles = "SuperAdmin")]
+        public async Task<ActionResult> Delete(int id)
+        {
+            //if (id == null)
+            //{
+            //    return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            //}
+
+            //var user = await db.Users.FindAsync(id);
+            //if (user == null)
+            //{
+            //    return HttpNotFound();
+            //}
+
+            //return View(user);
 
             var user = await db.Users.FindAsync(id);
-            if (user == null)
-            {
-                return HttpNotFound();
-            }
-
-            return View(user);
+            db.Users.Remove(user);
+            await db.SaveChangesAsync();
+            return RedirectToAction("Index");
         }
 
         // supprimer user
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        [Authorize(Roles = "Administrateur, Moderateur")]
+        [Authorize(Roles = "SuperAdmin")]
         public async Task<ActionResult> DeleteConfirmed(int id)
         {
             var user = await db.Users.FindAsync(id);

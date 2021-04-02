@@ -4,20 +4,21 @@
     ViewBag.Title = "Créer";
 }
 
+<br /><br />
 <h2 class="text-center">Créer une nouvelle catégorie</h2>
 
 
-@using (Html.BeginForm()) 
+@using (Html.BeginForm())
 {
     @Html.AntiForgeryToken()
-    
+
     <div class="form-horizontal">
         <hr />
         @Html.ValidationSummary(true, "", new { @class = "text-danger" })
         <div class="form-group">
             @Html.LabelFor(model => model.Libelle, htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                @Html.EditorFor(model => model.Libelle, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.EditorFor(model => model.Libelle, new { htmlAttributes = new { @class = "form-control", placeholder = "Entrez la catégorie de ressource" } })
                 @Html.ValidationMessageFor(model => model.Libelle, "", new { @class = "text-danger" })
             </div>
         </div>

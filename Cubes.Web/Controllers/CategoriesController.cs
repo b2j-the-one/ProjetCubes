@@ -11,7 +11,7 @@ using Cubes.Web.Models;
 
 namespace Cubes.Web.Controllers
 {
-    [Authorize(Roles = "Administrateur, Moderateur")]
+    [Authorize(Roles = "SuperAdmin, Admin")]
     public class CategoriesController : Controller
     {
         private DataContext db = new DataContext();
