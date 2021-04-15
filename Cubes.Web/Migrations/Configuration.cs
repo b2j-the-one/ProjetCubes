@@ -11,7 +11,6 @@
         {
             AutomaticMigrationsEnabled = true;
             AutomaticMigrationDataLossAllowed = true;
-            //ContextKey = "Cubes.Web.Models.DataContext";
         }
 
         protected override void Seed(Cubes.Web.Models.DataContext context)

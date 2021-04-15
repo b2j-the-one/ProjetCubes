@@ -12,6 +12,7 @@ using Cubes.Web.Models;
 using Cubes.Web.Helpers;
 using System.IO;
 using Microsoft.AspNet.Identity.EntityFramework;
+using System.Web.Helpers;
 
 namespace Cubes.Web.Controllers
 {
@@ -99,6 +100,8 @@ namespace Cubes.Web.Controllers
             switch (result)
             {
                 case SignInStatus.Success:
+                    // On récupère la séssion de l'utilisateur connecté
+                    Session["IdUser"] = db.Users.Single(u => u.Email == model.Email).IdUser;
                     Profil(model);
                     return RedirectToLocal(returnUrl);
                 case SignInStatus.LockedOut:
@@ -107,6 +110,7 @@ namespace Cubes.Web.Controllers
                     return RedirectToAction("SendCode", new { ReturnUrl = returnUrl, RememberMe = model.RememberMe });
                 case SignInStatus.Failure:
                 default:
+                    Response.StatusCode = 404;
                     ModelState.AddModelError("", "Email et/ou mot de passe incorrect.");
                     return View(model);
             }
@@ -227,8 +231,16 @@ namespace Cubes.Web.Controllers
                 }
             }
 
-            // Si nous sommes arrivés si loin, quelque chose a échoué, réafficher le formulaire
             return View(userView);
+        }
+
+        public ActionResult Crypter(string pass)
+        {
+            string salt = Crypto.GenerateSalt();
+            string password = pass + salt;
+            string hashedPass = Crypto.HashPassword(password);
+
+            return View();
         }
 
         private ApplicationUser CreateASPUser(RegisterUserView userView)

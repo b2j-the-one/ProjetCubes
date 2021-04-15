@@ -1,0 +1,155 @@
+﻿@model Cubes.Web.Models.RessourceFileView
+
+@{
+    ViewBag.Title = "Détails ressource";
+}
+
+<br />
+<h3 class="text-center">Joindre un autre fichier</h3>
+
+
+@using (Html.BeginForm("ChangeFile", "Ressources", FormMethod.Post, new { enctype = "multipart/form-data" }))
+{
+    @Html.AntiForgeryToken()
+
+    <div class="form-horizontal">
+        <hr />
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+        @Html.HiddenFor(model => model.IdRessource)
+
+        <br />
+        <div class="row">
+            <div class="col-md-8">
+                <div class="form-group">
+                    @Html.LabelFor(model => model.Nom, htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-10">
+                        @Html.EditorFor(model => model.Nom, new { htmlAttributes = new { @class = "form-control" } })
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    @Html.LabelFor(model => model.IdCategorie, "Catégorie", htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-10">
+                        @Html.DropDownList("IdCategorie", null, htmlAttributes: new { @class = "form-control" })
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    @Html.LabelFor(model => model.Titre, htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-10">
+                        @Html.EditorFor(model => model.Titre, new { htmlAttributes = new { @class = "form-control" } })
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    @Html.LabelFor(model => model.Description, htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-10">
+                        @Html.EditorFor(model => model.Description, new { htmlAttributes = new { @class = "form-control" } })
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <div class="col-md-offset-2 col-md-10">
+                        @Html.ActionLink("Revenir à l'accueil", "Index", "Ressources", new { }, new { @class = "btn btn-warning" })
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                @if (!string.IsNullOrEmpty(Model.Fichier))
+                {
+                    if (Model.Fichier.Contains(".jpg") || Model.Fichier.Contains(".png") || Model.Fichier.Contains(".gif") || Model.Fichier.Contains(".tiff"))
+                    {
+                        <img src="@Url.Content(Model.Fichier)" alt="Fichier joint" style="width:350px;height:350px;max-width: 100%; height: auto;" />
+                    }
+                    else if (Model.Fichier.Contains(".mp4"))
+                    {
+                        <div class="video-frame">
+                            <video style="width:350px; height:350px" controls>
+                                <source src="@Url.Content(Model.Fichier)" type="video/mp4" au autstart="true" loop="false" runat="server" style="border: gray 1px solid" />
+                            </video>
+                        </div>
+                    }
+                    else if (Model.Fichier.Contains(".avi"))
+                    {
+                        <div class="video-frame">
+                            <video style="width:350px; height:350px" controls>
+                                <source src="@Url.Content(Model.Fichier)" type="video/avi" autstart="true" loop="false" runat="server" style="border: gray 1px solid" />
+                            </video>
+                        </div>
+                    }
+                    else if (Model.Fichier.Contains(".webm"))
+                    {
+                        <div class="video-frame">
+                            <video style="width:350px; height:350px" controls>
+                                <source src="@Url.Content(Model.Fichier)" type="video/webm" autstart="true" loop="false" runat="server" style="border: gray 1px solid" />
+                            </video>
+                        </div>
+                    }
+                    else if (Model.Fichier.Contains(".mp3"))
+                    {
+                        <div class="audio-frame">
+                            <audio style="width:350px; height:350px" controls>
+                                <source src="@Url.Content(Model.Fichier)" type="audio/mp3" autstart="true" loop="false" runat="server" style="border: gray 1px solid" />
+                            </audio>
+                        </div>
+                    }
+                    else if (Model.Fichier.Contains(".aac"))
+                    {
+                        <div class="audio-frame">
+                            <audio style="width:350px; height:350px" controls>
+                                <source src="@Url.Content(Model.Fichier)" type="audio/aac" autstart="true" loop="false" runat="server" style="border: gray 1px solid" />
+                            </audio>
+                        </div>
+                    }
+                    else if (Model.Fichier.Contains(".mp4"))
+                    {
+                        <div class="audio-frame">
+                            <audio style="width:350px; height:350px" controls>
+                                <source src="@Url.Content(Model.Fichier)" type="audio/mp4" autstart="true" loop="false" runat="server" style="border: gray 1px solid" />
+                            </audio>
+                        </div>
+                    }
+                    else if (Model.Fichier.Contains(".pdf"))
+                    {
+                        <p style="width:350px;height:350px;"><a href="@Url.Content(Model.Fichier)" target="_blank"><img src="~/Content/Files/icons8-pdf-100.png" />Ouvrir le fichier</a></p>
+                        @*<p style="width:350px;height:350px;"><a href="@Url.Content(Model.Fichier)" target="_blank"><img src="~/Content/Files/icons8-pdf.png" /></a></p>*@
+                    }
+                    else if (Model.Fichier.Contains(".docx"))
+                    {
+                        <p style="width:350px;height:350px;"><a href="@Url.Content(Model.Fichier)" target="_blank"><img src="~/Content/Files/icons8-microsoft-word-2019-240.png" />Ouvrir le fichier</a></p>
+                    }
+                    else if (Model.Fichier.Contains(".xls") || Model.Fichier.Contains(".xlsx"))
+                    {
+                        <p style="width:350px;height:350px;"><a href="@Url.Content(Model.Fichier)" target="_blank"><img src="~/Content/Files/icons8-microsoft-excel-2019-240.png" />Ouvrir le fichier</a></p>
+                    }
+                    else if (Model.Fichier.Contains(".pptx"))
+                    {
+                        <p style="width:350px;height:350px;"><a href="@Url.Content(Model.Fichier)" target="_blank"><img src="~/Content/Files/icons8-microsoft-powerpoint-2019-240.png" />Ouvrir le fichier</a></p>
+                    }
+                }
+
+                <div class="form-group">
+                    <div class="col-md-10">
+                        <span class="btn btn-default btn-file">
+                            @Html.TextBoxFor(modele => modele.NewFile, new { type = "file" })
+                        </span>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <div class="col-md-offset-2 col-md-10">
+                        <input type="submit" value="Enregistrer" class="btn btn-primary" />
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}
+
+
+
+

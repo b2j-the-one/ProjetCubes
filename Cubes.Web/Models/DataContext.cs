@@ -13,5 +13,11 @@ namespace Cubes.Web.Models
         public DbSet<User> Users { get; set; }
 
         public DbSet<Ressource> Ressources { get; set; }
+
+        public DbSet<Message> Messages { get; set; }
+
+        public DbSet<Reply> Replies { get; set; }
+
+        public DbSet<Commentaire> Commentaires { get; set; }
     }
 }

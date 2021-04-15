@@ -2,8 +2,6 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
-using System.Web;
 
 namespace Cubes.Web.Models
 {
@@ -49,7 +47,7 @@ namespace Cubes.Web.Models
         //[DisplayFormat(DataFormatString = "{0:dd/MM/yyyy hh:mm}", ApplyFormatInEditMode = true)]
         [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd hh:mm}", ApplyFormatInEditMode = true)]
         [Display(Name = "Date inscription")]
-        [NotMapped]
+        [ScaffoldColumn(false)]
         public DateTime? DateInscription { get; set; }
 
         //[Required(ErrorMessage = "Ce champ est obligatoire")]
@@ -59,26 +57,14 @@ namespace Cubes.Web.Models
         [DataType(DataType.DateTime)]
         [Display(Name = "Date bannissement")]
         [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd hh:mm}", ApplyFormatInEditMode = true)]
-        [NotMapped]
+        [ScaffoldColumn(false)]
         public DateTime? DateBannissement { get; set; }
 
         [DataType(DataType.DateTime)]
         [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd hh:mm}", ApplyFormatInEditMode = true)]
         [Display(Name = "Date fin bannissement")]
-        [NotMapped]
+        [ScaffoldColumn(false)]
         public DateTime? DateFinBannissement { get; set; }
-
-        //static DateTime? ParseDateTime2(DateTime? date)
-        //{
-        //    if (date == null || date.ToString() == "1/1/0001 12:00:00 AM")
-        //    {
-        //        return null;
-        //    }
-        //    else
-        //    {
-        //        return date;
-        //    }
-        //}
 
         [StringLength(200, ErrorMessage = "Ce champ doit contenir au maximum {1} caractères et au minimum {2}", MinimumLength = 5)]
         [DataType(DataType.ImageUrl)]
@@ -100,5 +86,9 @@ namespace Cubes.Web.Models
         //        return null;
         //    }
         //}
+
+        //public virtual ICollection<Message> Messages { get; set; }
+
+        //public virtual ICollection<Reply> Replies { get; set; }
     }
 }

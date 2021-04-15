@@ -1,4 +1,4 @@
-﻿@model Cubes.Web.Models.UserProfilView
+﻿@model Cubes.Web.Models.UserView
 
 @{
     ViewBag.Title = "Profil";
@@ -82,8 +82,6 @@
             @if (!string.IsNullOrEmpty(Model.Photo))
             {
                 <img src="@Url.Content(Model.Photo)" alt="Photo de profil" style="width:250px;height:250px;max-width: 100%; height: auto;" /><br />
-
-                @*@Html.ActionLink("Changer votre photo de profil", "ChangePhoto", "Users", new { }, new { @class = "btn btn-success" })*@
             }
             <br />
             <div class="form-group">

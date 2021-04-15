@@ -10,6 +10,8 @@ using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
 using Cubes.Web.Helpers;
 using System;
+using System.Configuration;
+using System.Data.SqlClient;
 
 namespace Cubes.Web.Controllers
 {
@@ -34,7 +36,7 @@ namespace Cubes.Web.Controllers
                     if (userManager.IsInRole(userASP.Id, "SuperAdmin"))
                     {
                         userManager.RemoveFromRole(userASP.Id, "SuperAdmin");
-                        userManager.AddToRole(userASP.Id, "Citoyen");
+                        //userManager.AddToRole(userASP.Id, "Citoyen");
                     }
                     else
                     {
@@ -63,7 +65,7 @@ namespace Cubes.Web.Controllers
                     if (userManager.IsInRole(userASP.Id, "Admin"))
                     {
                         userManager.RemoveFromRole(userASP.Id, "Admin");
-                        userManager.AddToRole(userASP.Id, "Citoyen");
+                        //userManager.AddToRole(userASP.Id, "Citoyen");
                     }
                     else
                     {
@@ -92,7 +94,7 @@ namespace Cubes.Web.Controllers
                     if (userManager.IsInRole(userASP.Id, "Moderateur"))
                     {
                         userManager.RemoveFromRole(userASP.Id, "Moderateur");
-                        userManager.AddToRole(userASP.Id, "Citoyen");
+                        //userManager.AddToRole(userASP.Id, "Citoyen");
                     }
                     else
                     {
@@ -137,7 +139,7 @@ namespace Cubes.Web.Controllers
         [Authorize(Roles = "SuperAdmin, Admin, Moderateur, Citoyen")]
         public async Task<ActionResult> ChangePhoto()
         {
-            // On trouve l'utilisateur concerné
+            // On trouve l'utilisateur connecté
             var user = await db.Users.Where(u => u.Email == this.User.Identity.Name).FirstOrDefaultAsync();
 
             var view = new UserProfilView
@@ -194,23 +196,49 @@ namespace Cubes.Web.Controllers
 
         // Profil utilisateur
         [Authorize(Roles = "SuperAdmin, Admin, Moderateur, Citoyen")]
-        public async Task<ActionResult> MyProfile()
+        public async Task<ActionResult> MyProfile(int? id)
         {
-            // On trouve l'utilisateur concerné
-            var user = await db.Users.Where(u => u.Email == this.User.Identity.Name).FirstOrDefaultAsync();
-
-            var view = new UserProfilView
+            if (id == null)
             {
-                DateNaissance = user.DateNaissance,
-                Prenom = user.Prenom,
-                Nom = user.Nom,
-                Photo = user.Photo,
-                IdUser = user.IdUser,
-                Email = user.Email,
-                Telephone = user.Telephone
-            };
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
 
-            return View(view);
+            var user = await db.Users.FindAsync(id);
+            if (user == null)
+            {
+                return HttpNotFound();
+            }
+
+            var connectionString = ConfigurationManager.ConnectionStrings["DefaultConnection"].ConnectionString;
+            SqlConnection connection = new SqlConnection(connectionString);
+            string sql = "UPDATE Users SET Email = " + user.Email + ", Nom = " + user.Nom + ", Prenom = " + user.Prenom +
+                                                      ", Telephone = " + user.Telephone + " WHERE Users.IdUser = " + user.IdUser;
+            try
+            {
+                connection.Open();
+                var command = new SqlCommand(sql, connection);
+                await command.ExecuteNonQueryAsync();
+            }
+            catch (Exception ex)
+            {
+                ex.ToString();
+            }
+
+            //// On trouve l'utilisateur connecté
+            //var user = await db.Users.Where(u => u.Email == this.User.Identity.Name).FirstOrDefaultAsync();
+
+            //var view = new UserProfilView
+            //{
+            //    DateNaissance = user.DateNaissance,
+            //    Prenom = user.Prenom,
+            //    Nom = user.Nom,
+            //    Photo = user.Photo,
+            //    IdUser = user.IdUser,
+            //    Email = user.Email,
+            //    Telephone = user.Telephone
+            //};
+
+            return View();
         }
 
         [HttpPost]
@@ -218,37 +246,53 @@ namespace Cubes.Web.Controllers
         {
             if (ModelState.IsValid)
             {
-                var pic = string.Empty;
-                var folder = "~/Content/Files";
+                //var connectionString = ConfigurationManager.ConnectionStrings["DefaultConnection"].ConnectionString;
+                //SqlConnection connection = new SqlConnection(connectionString);
+                ////var sql = @"UPDATE Users SET Email = " + view.Email + ", Nom = " + view.Nom + ", Prenom = " + view.Prenom +
+                ////", Telephone = " + view.Telephone + " WHERE Users.IdUser = " + view.IdUser;
 
-                // Charger la photo
-                if (view.NewPhoto != null)
+                //try
+                //{
+                //    connection.Open();
+                //    SqlCommand cmd = new SqlCommand("UPDATE Users SET Email = " + view.Email + ", Nom = " + view.Nom + ", Prenom = " + view.Prenom +
+                //                                    ", Telephone = " + view.Telephone + " WHERE Users.IdUser = " + view.IdUser);
+                //    await cmd.ExecuteNonQueryAsync();
+                //}
+                //catch (Exception ex)
+                //{
+                //    ex.ToString();
+                //}
+
+                var connectionString = ConfigurationManager.ConnectionStrings["DefaultConnection"].ConnectionString;
+                SqlConnection connection = new SqlConnection(connectionString);
+                string sql = "UPDATE Users SET Email = " + view.Email + ", Nom = " + view.Nom + ", Prenom = " + view.Prenom +
+                                                          ", Telephone = " + view.Telephone + " WHERE Users.IdUser = " + view.IdUser;
+                try
                 {
-                    pic = FilesHelper.UploadFile(view.NewPhoto, folder);
-                    pic = string.Format("{0}/{1}", folder, pic);
+                    connection.Open();
+                    var command = new SqlCommand(sql, connection);
+                    await command.ExecuteNonQueryAsync();
                 }
-                else
+                catch (Exception ex)
                 {
-                    pic = "~/Content/Files/user_avatar.png";
+                    ex.ToString();
                 }
 
-                var user = new User
-                {
-                    IdUser = view.IdUser,
-                    Email = view.Email,
-                    Nom = view.Nom,
-                    Prenom = view.Prenom,
-                    DateNaissance = view.DateNaissance,
-                    IsActivated = true,
-                    Photo = view.Photo,
-                    Telephone = view.Telephone
-                };
+                //var user = new User
+                //{
+                //    IdUser = view.IdUser,
+                //    Email = view.Email,
+                //    Nom = view.Nom,
+                //    Prenom = view.Prenom,
+                //    DateNaissance = view.DateNaissance,
+                //    IsActivated = true,
+                //    Photo = view.Photo,
+                //    Telephone = view.Telephone
+                //};
 
-                user.Photo = pic;
-                db.Entry(user).State = EntityState.Modified;
-                await db.SaveChangesAsync();
-
-                return RedirectToAction("Index", "Home");
+                ////user.Photo = pic;
+                //db.Entry(user).State = EntityState.Modified;
+                //await db.SaveChangesAsync();
             }
 
             return View(view);
@@ -419,7 +463,7 @@ namespace Cubes.Web.Controllers
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
 
-            var user = await db.Users.FindAsync(id);
+            User user = await db.Users.FindAsync(id);
             if (user == null)
             {
                 return HttpNotFound();
@@ -429,7 +473,6 @@ namespace Cubes.Web.Controllers
 
             return View(userView);
         }
-
 
         // Elements affichés pour la modification
         private UserView ToView(User user)
@@ -468,6 +511,7 @@ namespace Cubes.Web.Controllers
 
                 var user = ToUser1(userView);
                 user.Photo = pic;
+
                 db.Entry(user).State = EntityState.Modified;
                 await db.SaveChangesAsync();
 
@@ -496,34 +540,11 @@ namespace Cubes.Web.Controllers
         [Authorize(Roles = "SuperAdmin")]
         public async Task<ActionResult> Delete(int id)
         {
-            //if (id == null)
-            //{
-            //    return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            //}
-
-            //var user = await db.Users.FindAsync(id);
-            //if (user == null)
-            //{
-            //    return HttpNotFound();
-            //}
-
-            //return View(user);
-
             var user = await db.Users.FindAsync(id);
-            db.Users.Remove(user);
-            await db.SaveChangesAsync();
-            return RedirectToAction("Index");
-        }
 
-        // supprimer user
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
-        [Authorize(Roles = "SuperAdmin")]
-        public async Task<ActionResult> DeleteConfirmed(int id)
-        {
-            var user = await db.Users.FindAsync(id);
             db.Users.Remove(user);
-            await db.SaveChangesAsync();
+            await db.SaveChangesAsync(); 
+
             return RedirectToAction("Index");
         }
 

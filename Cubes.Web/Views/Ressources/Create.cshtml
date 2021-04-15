@@ -25,9 +25,9 @@
         </div>
 
         <div class="form-group">
-            @Html.LabelFor(model => model.IdCategorie, "Catégorie ressource", htmlAttributes: new { @class = "control-label col-md-2" })
+            @Html.LabelFor(model => model.IdCategorie, "Catégorie", htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                @Html.DropDownList("IdCategorie", null, htmlAttributes: new { @class = "form-control" })
+                @Html.DropDownList("IdCategorie", null, "Sélectionnez la catégorie de la ressource", htmlAttributes: new { @class = "form-control" })
                 @Html.ValidationMessageFor(model => model.IdCategorie, "", new { @class = "text-danger" })
             </div>
         </div>
@@ -41,44 +41,44 @@
         </div>
 
         @*<div class="form-group">
-            @Html.LabelFor(model => model.IsPrivate, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                <div class="checkbox">
-                    @Html.EditorFor(model => model.IsPrivate)
-                    @Html.ValidationMessageFor(model => model.IsPrivate, "", new { @class = "text-danger" })
+                @Html.LabelFor(model => model.IsPrivate, htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-10">
+                    <div class="checkbox">
+                        @Html.EditorFor(model => model.IsPrivate)
+                        @Html.ValidationMessageFor(model => model.IsPrivate, "", new { @class = "text-danger" })
+                    </div>
                 </div>
             </div>
-        </div>
 
-        <div class="form-group">
-            @Html.LabelFor(model => model.IsValid, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                <div class="checkbox">
-                    @Html.EditorFor(model => model.IsValid)
-                    @Html.ValidationMessageFor(model => model.IsValid, "", new { @class = "text-danger" })
+            <div class="form-group">
+                @Html.LabelFor(model => model.IsValid, htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-10">
+                    <div class="checkbox">
+                        @Html.EditorFor(model => model.IsValid)
+                        @Html.ValidationMessageFor(model => model.IsValid, "", new { @class = "text-danger" })
+                    </div>
                 </div>
             </div>
-        </div>
 
-        <div class="form-group">
-            @Html.LabelFor(model => model.IsPublish, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                <div class="checkbox">
-                    @Html.EditorFor(model => model.IsPublish)
-                    @Html.ValidationMessageFor(model => model.IsPublish, "", new { @class = "text-danger" })
+            <div class="form-group">
+                @Html.LabelFor(model => model.IsPublish, htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-10">
+                    <div class="checkbox">
+                        @Html.EditorFor(model => model.IsPublish)
+                        @Html.ValidationMessageFor(model => model.IsPublish, "", new { @class = "text-danger" })
+                    </div>
                 </div>
             </div>
-        </div>
 
-        <div class="form-group">
-            @Html.LabelFor(model => model.IsFavorite, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                <div class="checkbox">
-                    @Html.EditorFor(model => model.IsFavorite)
-                    @Html.ValidationMessageFor(model => model.IsFavorite, "", new { @class = "text-danger" })
+            <div class="form-group">
+                @Html.LabelFor(model => model.IsFavorite, htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-10">
+                    <div class="checkbox">
+                        @Html.EditorFor(model => model.IsFavorite)
+                        @Html.ValidationMessageFor(model => model.IsFavorite, "", new { @class = "text-danger" })
+                    </div>
                 </div>
-            </div>
-        </div>*@
+            </div>*@
 
         <div class="form-group">
             @Html.LabelFor(model => model.Fichier, htmlAttributes: new { @class = "control-label col-md-2" })

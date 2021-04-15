@@ -1,90 +1,149 @@
-﻿@model Cubes.Web.Models.Ressource
+﻿@model Cubes.Web.Models.RessourceView
 
 @{
-    ViewBag.Title = "Details";
+    ViewBag.Title = "Détails";
 }
 
-<h2>Details</h2>
+<br />
+<h3 class="text-center">Détails de la ressource</h3>
 
-<div>
-    <h4>Ressource</h4>
-    <hr />
-    <dl class="dl-horizontal">
-        <dt>
-            @Html.DisplayNameFor(model => model.Categorie.Libelle)
-        </dt>
 
-        <dd>
-            @Html.DisplayFor(model => model.Categorie.Libelle)
-        </dd>
+<div class="form-horizontal">
+    <div class="row">
+        <div class="col-md-8">
+            @using (Html.BeginForm("Details", "Ressources", FormMethod.Post, new { enctype = "multipart/form-data" }))
+            {
+                @Html.AntiForgeryToken()
 
-        <dt>
-            @Html.DisplayNameFor(model => model.Nom)
-        </dt>
+                <div class="form-horizontal">
+                    <hr />
+                    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                    @Html.HiddenFor(model => model.IdRessource)
 
-        <dd>
-            @Html.DisplayFor(model => model.Nom)
-        </dd>
+                    <br />
+                    <div class="row">
+                        <div class="col-md-8">
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.Nom, htmlAttributes: new { @class = "control-label col-md-2" })
+                                <div class="col-md-10">
+                                    @Html.EditorFor(model => model.Nom, new { htmlAttributes = new { @class = "form-control", @disabled = "disabled" } })
+                                </div>
+                            </div>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.Titre)
-        </dt>
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.IdCategorie, "Catégorie", htmlAttributes: new { @class = "control-label col-md-2" })
+                                <div class="col-md-10">
+                                    @Html.DropDownList("IdCategorie", null, htmlAttributes: new { @class = "form-control", @disabled = "disabled" })
+                                </div>
+                            </div>
 
-        <dd>
-            @Html.DisplayFor(model => model.Titre)
-        </dd>
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.Titre, htmlAttributes: new { @class = "control-label col-md-2" })
+                                <div class="col-md-10">
+                                    @Html.EditorFor(model => model.Titre, new { htmlAttributes = new { @class = "form-control", @disabled = "disabled" } })
+                                </div>
+                            </div>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.IsPrivate)
-        </dt>
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.Description, htmlAttributes: new { @class = "control-label col-md-2" })
+                                <div class="col-md-10">
+                                    @Html.EditorFor(model => model.Description, new { htmlAttributes = new { @class = "form-control", @disabled = "disabled" } })
+                                </div>
+                            </div>
 
-        <dd>
-            @Html.DisplayFor(model => model.IsPrivate)
-        </dd>
+                            <div class="form-group">
+                                <div class="col-md-offset-2 col-md-10">
+                                    @Html.ActionLink("Revenir à l'accueil", "Index", "Ressources", new { }, new { @class = "btn btn-warning" })
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
 
-        <dt>
-            @Html.DisplayNameFor(model => model.IsValid)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.IsValid)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.IsPublish)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.IsPublish)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.IsFavorite)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.IsFavorite)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.Fichier)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.Fichier)
-        </dd>
-
-        <dt>
-            @Html.DisplayNameFor(model => model.Description)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.Description)
-        </dd>
-
-    </dl>
+        <div class="col-md-4">
+            @if (!string.IsNullOrEmpty(Model.Fichier))
+            {
+                if (Model.Fichier.Contains(".jpg") || Model.Fichier.Contains(".png") || Model.Fichier.Contains(".gif") || Model.Fichier.Contains(".tiff"))
+                {
+                    <img src="@Url.Content(Model.Fichier)" alt="Fichier joint" style="width:350px;height:350px;max-width: 100%; height: auto;" />
+                    @*<figure>
+                    <img src="@Url.Content(Model.Fichier)" alt="Fichier joint" style="width:350px;height:350px;max-width: 100%; height: auto;" />
+                    <figcaption>
+                        <p>Image de la ressource</p>
+                    </figcaption>
+                </figure>*@
+                }
+                else if (Model.Fichier.Contains(".mp4"))
+                {
+                    <div class="video-frame">
+                        <video style="width:350px; height:350px" controls>
+                            <source src="@Url.Content(Model.Fichier)" type="video/mp4" au autstart="true" loop="false" runat="server" style="border: gray 1px solid" />
+                        </video>
+                    </div>
+                }
+                else if (Model.Fichier.Contains(".avi"))
+                {
+                    <div class="video-frame">
+                        <video style="width:350px; height:350px" controls>
+                            <source src="@Url.Content(Model.Fichier)" type="video/avi" autstart="true" loop="false" runat="server" style="border: gray 1px solid" />
+                        </video>
+                    </div>
+                }
+                else if (Model.Fichier.Contains(".webm"))
+                {
+                    <div class="video-frame">
+                        <video style="width:350px; height:350px" controls>
+                            <source src="@Url.Content(Model.Fichier)" type="video/webm" autstart="true" loop="false" runat="server" style="border: gray 1px solid" />
+                        </video>
+                    </div>
+                }
+                else if (Model.Fichier.Contains(".mp3"))
+                {
+                    <div class="audio-frame">
+                        <audio style="width:350px; height:350px" controls>
+                            <source src="@Url.Content(Model.Fichier)" type="audio/mp3" autstart="true" loop="false" runat="server" style="border: gray 1px solid" />
+                        </audio>
+                    </div>
+                }
+                else if (Model.Fichier.Contains(".aac"))
+                {
+                    <div class="audio-frame">
+                        <audio style="width:350px; height:350px" controls>
+                            <source src="@Url.Content(Model.Fichier)" type="audio/aac" autstart="true" loop="false" runat="server" style="border: gray 1px solid" />
+                        </audio>
+                    </div>
+                }
+                else if (Model.Fichier.Contains(".mp4"))
+                {
+                    <div class="audio-frame">
+                        <audio style="width:350px; height:350px" controls>
+                            <source src="@Url.Content(Model.Fichier)" type="audio/mp4" autstart="true" loop="false" runat="server" style="border: gray 1px solid" />
+                        </audio>
+                    </div>
+                }
+                else if (Model.Fichier.Contains(".pdf"))
+                {
+                    <br /><br />
+                    <p style="width:350px;height:350px;"><a href="@Url.Content(Model.Fichier)" target="_blank"><img src="~/Content/Files/mon_pdf.png" />Ouvrir le fichier</a></p>
+                }
+                else if (Model.Fichier.Contains(".docx"))
+                {
+                    <br /><br />
+                    <p style="width:350px;height:350px;"><a href="@Url.Content(Model.Fichier)" download><img src="~/Content/Files/word.jpg" />Télécharger</a></p>
+                }
+                else if (Model.Fichier.Contains(".xls") || Model.Fichier.Contains(".xlsx"))
+                {
+                    <br /><br />
+                    <p style="width:350px;height:350px;"><a href="@Url.Content(Model.Fichier)" download><img src="~/Content/Files/excel.jpg" />Télécharger</a></p>
+                }
+                else if (Model.Fichier.Contains(".pptx"))
+                {
+                    <br /><br />
+                    <p style="width:350px;height:350px;"><a href="@Url.Content(Model.Fichier)" download><img src="~/Content/Files/power_point.png" />Télécharger</a></p>
+                }
+            }
+        </div>
+    </div>
 </div>
-<p>
-    @Html.ActionLink("Edit", "Edit", new { id = Model.Id }) |
-    @Html.ActionLink("Back to List", "Index")
-</p>

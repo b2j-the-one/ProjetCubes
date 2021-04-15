@@ -107,12 +107,12 @@
         </td>
         <td>
             @*<a href='@Url.Action("Edit", "Users", new { id = item.IdUser })' class="btn btn-success" data-toggle="tooltip" title="Modifier"><i class="glyphicon glyphicon-pencil"></i> </a>*@
-            <a href='@Url.Action("Details", "Users", new { id = item.IdUser })' class="btn btn-warning" data-toggle="tooltip" title="Voir le profil"><i class="glyphicon glyphicon-eye-open"></i> </a>
-            <a href='@Url.Action("OnOffSuperAdmin", "Users", new { id = item.IdUser })' class="btn btn-success" data-toggle="tooltip" title="Définir comme Super Admin" onclick="return confirm('Définir cet utilisateur comme Super Admin ?')"><i class="glyphicon glyphicon-off"></i> </a>
+            <a href='@Url.Action("MyProfile", "Users", new { id = item.IdUser })' class="btn btn-warning" data-toggle="tooltip" title="Voir le profil"><i class="glyphicon glyphicon-eye-open"></i> </a>
             <a href='@Url.Action("Delete", "Users", new { id = item.IdUser })' class="btn btn-danger" data-toggle="tooltip" title="Supprimer l'utilisateur" onclick="return confirm('Etes-vous sûr de vouloir supprimer cet utilisateur ?')"><i class="glyphicon glyphicon-trash"></i> </a>
+            <a href='@Url.Action("OnOffSuperAdmin", "Users", new { id = item.IdUser })' class="btn btn-success" data-toggle="tooltip" title="Définir comme Super Admin" onclick="return confirm('Définir cet utilisateur comme Super Admin ?')"><i class="glyphicon glyphicon-user"></i> </a>
             <a href='@Url.Action("OnOffAdmin", "Users", new { id = item.IdUser })' class="btn btn-primary" data-toggle="tooltip" title="Définir comme Administrateur" onclick="return confirm('Définir cet utilisateur comme Administrateur ?')"><i class="glyphicon glyphicon-off"></i> </a>
             <a href='@Url.Action("OnOffModerator", "Users", new { id = item.IdUser })' class="btn btn-default" data-toggle="tooltip" title="Définir comme Modérateur" onclick="return confirm('Définir cet utilisateur comme Modérateur ?')"><i class="glyphicon glyphicon-off"></i> </a>
-            <a href='@Url.Action("ActivateUserAccount", "Users", new { id = item.IdUser })' class="btn btn-info" data-toggle="tooltip" title="Activer/Désactiver utilisateur" onclick="return confirm('Activer/Désactiver le compte de cet utilisateur ?')"><i class="glyphicon glyphicon-off"></i> </a>
+            <a href='@Url.Action("ActivateUserAccount", "Users", new { id = item.IdUser })' class="btn btn-info" data-toggle="tooltip" title="Activer/Désactiver utilisateur" onclick="return confirm('Activer/Désactiver le compte de cet utilisateur ?')"><i class="glyphicon glyphicon-ban-circle"></i> </a>
         </td>
     </tr>
     }

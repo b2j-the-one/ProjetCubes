@@ -1,113 +1,174 @@
-﻿@model Cubes.Web.Models.Ressource
+﻿@model Cubes.Web.Models.RessourceView
 
 @{
-    ViewBag.Title = "Edit";
+    ViewBag.Title = "Editer";
 }
 
-<h2>Edit</h2>
+<h2 class="text-center">Modifier la ressource</h2>
+<h4 class="alert-danger">@ViewBag.Error</h4>
 
 
-@using (Html.BeginForm())
-{
-    @Html.AntiForgeryToken()
-    
-    <div class="form-horizontal">
-        <h4>Ressource</h4>
-        <hr />
-        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-        @Html.HiddenFor(model => model.Id)
+<div class="form-horizontal">
+    <div class="row">
+        <div class="col-md-8">
+            @using (Html.BeginForm("Edit", "Ressources", FormMethod.Post, new { enctype = "multipart/form-data" }))
+            {
+                @Html.AntiForgeryToken()
 
-        <div class="form-group">
-            @Html.LabelFor(model => model.Nom, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.Nom, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.Nom, "", new { @class = "text-danger" })
-            </div>
-        </div>
+                <div class="form-horizontal">
+                    <hr />
+                    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                    @Html.HiddenFor(model => model.IdRessource)
 
-        <div class="form-group">
-            @Html.LabelFor(model => model.IdCategorie, "IdCategorie", htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.DropDownList("IdCategorie", null, htmlAttributes: new { @class = "form-control" })
-                @Html.ValidationMessageFor(model => model.IdCategorie, "", new { @class = "text-danger" })
-            </div>
-        </div>
+                    <br />
+                    <div class="row">
+                        <div class="col-md-8">
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.Nom, htmlAttributes: new { @class = "control-label col-md-2" })
+                                <div class="col-md-10">
+                                    @Html.EditorFor(model => model.Nom, new { htmlAttributes = new { @class = "form-control" } })
+                                    @Html.ValidationMessageFor(model => model.Nom, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
 
-        <div class="form-group">
-            @Html.LabelFor(model => model.Titre, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.Titre, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.Titre, "", new { @class = "text-danger" })
-            </div>
-        </div>
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.IdCategorie, "Catégorie", htmlAttributes: new { @class = "control-label col-md-2" })
+                                <div class="col-md-10">
+                                    @Html.DropDownList("IdCategorie", null, htmlAttributes: new { @class = "form-control" })
+                                    @Html.ValidationMessageFor(model => model.IdCategorie, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
 
-        <div class="form-group">
-            @Html.LabelFor(model => model.IsPrivate, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                <div class="checkbox">
-                    @Html.EditorFor(model => model.IsPrivate)
-                    @Html.ValidationMessageFor(model => model.IsPrivate, "", new { @class = "text-danger" })
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.User, htmlAttributes: new { @class = "control-label col-md-2" })
+                                <div class="col-md-10">
+                                    @Html.EditorFor(model => model.User, new { htmlAttributes = new { @class = "form-control" } })
+                                    @Html.ValidationMessageFor(model => model.User, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.Titre, htmlAttributes: new { @class = "control-label col-md-2" })
+                                <div class="col-md-10">
+                                    @Html.EditorFor(model => model.Titre, new { htmlAttributes = new { @class = "form-control" } })
+                                    @Html.ValidationMessageFor(model => model.Titre, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.Description, htmlAttributes: new { @class = "control-label col-md-2" })
+                                <div class="col-md-10">
+                                    @Html.EditorFor(model => model.Description, new { htmlAttributes = new { @class = "form-control" } })
+                                    @Html.ValidationMessageFor(model => model.Description, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <div class="col-md-offset-2 col-md-10">
+                                    <input type="submit" value="Enrégistrer" class="btn btn-primary" />
+                                    @Html.ActionLink("Revenir à l'accueil", "Index", "Ressources", new { }, new { @class = "btn btn-warning" })
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-            </div>
+            }
         </div>
 
-        <div class="form-group">
-            @Html.LabelFor(model => model.IsValid, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                <div class="checkbox">
-                    @Html.EditorFor(model => model.IsValid)
-                    @Html.ValidationMessageFor(model => model.IsValid, "", new { @class = "text-danger" })
+        <div class="col-md-4">
+            @if (!string.IsNullOrEmpty(Model.Fichier))
+            {
+                if (Model.Fichier.Contains(".jpg") || Model.Fichier.Contains(".png") || Model.Fichier.Contains(".gif") || Model.Fichier.Contains(".tiff") || Model.Fichier.Contains(".jfif"))
+                {
+                    <img src="@Url.Content(Model.Fichier)" alt="Fichier joint" style="width:350px;height:350px;max-width: 100%; height: auto;" />
+
+                    @*<figure>
+                    <img src="@Url.Content(Model.Fichier)" alt="Fichier joint" style="width:350px;height:350px;max-width: 100%; height: auto;" />
+                    <figcaption>
+                        <p>Image de la ressource</p>
+                    </figcaption>
+                </figure>*@
+                }
+                else if (Model.Fichier.Contains(".mp4"))
+                {
+                    <div class="video-frame">
+                        <video style="width:350px; height:350px" controls>
+                            <source src="@Url.Content(Model.Fichier)" type="video/mp4" au autstart="true" loop="false" runat="server" style="border: gray 1px solid" />
+                        </video>
+                    </div>
+                }
+                else if (Model.Fichier.Contains(".avi"))
+                {
+                    <div class="video-frame">
+                        <video style="width:350px; height:350px" controls>
+                            <source src="@Url.Content(Model.Fichier)" type="video/avi" autstart="true" loop="false" runat="server" style="border: gray 1px solid" />
+                        </video>
+                    </div>
+                }
+                else if (Model.Fichier.Contains(".webm"))
+                {
+                    <div class="video-frame">
+                        <video style="width:350px; height:350px" controls>
+                            <source src="@Url.Content(Model.Fichier)" type="video/webm" autstart="true" loop="false" runat="server" style="border: gray 1px solid" />
+                        </video>
+                    </div>
+                }
+                else if (Model.Fichier.Contains(".mp3"))
+                {
+                    <div class="audio-frame">
+                        <audio style="width:350px; height:350px" controls>
+                            <source src="@Url.Content(Model.Fichier)" type="audio/mp3" autstart="true" loop="false" runat="server" style="border: gray 1px solid" />
+                        </audio>
+                    </div>
+                }
+                else if (Model.Fichier.Contains(".aac"))
+                {
+                    <div class="audio-frame">
+                        <audio style="width:350px; height:350px" controls>
+                            <source src="@Url.Content(Model.Fichier)" type="audio/aac" autstart="true" loop="false" runat="server" style="border: gray 1px solid" />
+                        </audio>
+                    </div>
+                }
+                else if (Model.Fichier.Contains(".mp4"))
+                {
+                    <div class="audio-frame">
+                        <audio style="width:350px; height:350px" controls>
+                            <source src="@Url.Content(Model.Fichier)" type="audio/mp4" autstart="true" loop="false" runat="server" style="border: gray 1px solid" />
+                        </audio>
+                    </div>
+                }
+                else if (Model.Fichier.Contains(".pdf"))
+                {
+                    <br /><br />
+                    <p style="width:350px;height:350px;"><a href="@Url.Content(Model.Fichier)" data-toggle="tooltip" title="Ouvrir le fichier" target="_blank"><img src="~/Content/Files/mon_pdf.png" />Ouvrir le fichier</a></p>
+                    @*<p style="width:350px;height:350px;"><a href="@Url.Content(Model.Fichier)" target="_blank"><img src="~/Content/Files/icons8-pdf.png" /></a></p>*@
+                }
+                else if (Model.Fichier.Contains(".docx"))
+                {
+                    <br /><br />
+                    <p style="width:350px;height:350px;"><a href="@Url.Content(Model.Fichier)" data-toggle="tooltip" title="Télécharger le fichier" download><img src="~/Content/Files/word.jpg" />Télécharger</a></p>
+                }
+                else if (Model.Fichier.Contains(".xls") || Model.Fichier.Contains(".xlsx"))
+                {
+                    <br /><br />
+                    <p style="width:350px;height:350px;"><a href="@Url.Content(Model.Fichier)" data-toggle="tooltip" title="Télécharger le fichier" download><img src="~/Content/Files/excel.jpg" />Télécharger</a></p>
+                }
+                else if (Model.Fichier.Contains(".pptx"))
+                {
+                    <br /><br />
+                    <p style="width:350px;height:350px;"><a href="@Url.Content(Model.Fichier)" data-toggle="tooltip" title="Télécharger le fichier" download><img src="~/Content/Files/power_point.png" />Télécharger</a></p>
+                }
+            }
+            
+            <div class="form-group">
+                <div class="col-md-offset-2 col-md-10">
+                    <a href='@Url.Action("ChangeFile", "Ressources", new { id = Model.IdRessource })' class="btn btn-primary" data-toggle="tooltip" title="Joindre un autre fichier"><i class="glyphicon glyphicon-image"></i> Modifier</a>
                 </div>
-            </div>
-        </div>
-
-        <div class="form-group">
-            @Html.LabelFor(model => model.IsPublish, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                <div class="checkbox">
-                    @Html.EditorFor(model => model.IsPublish)
-                    @Html.ValidationMessageFor(model => model.IsPublish, "", new { @class = "text-danger" })
-                </div>
-            </div>
-        </div>
-
-        <div class="form-group">
-            @Html.LabelFor(model => model.IsFavorite, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                <div class="checkbox">
-                    @Html.EditorFor(model => model.IsFavorite)
-                    @Html.ValidationMessageFor(model => model.IsFavorite, "", new { @class = "text-danger" })
-                </div>
-            </div>
-        </div>
-
-        <div class="form-group">
-            @Html.LabelFor(model => model.Fichier, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.Fichier, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.Fichier, "", new { @class = "text-danger" })
-            </div>
-        </div>
-
-        <div class="form-group">
-            @Html.LabelFor(model => model.Description, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.Description, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.Description, "", new { @class = "text-danger" })
-            </div>
-        </div>
-
-        <div class="form-group">
-            <div class="col-md-offset-2 col-md-10">
-                <input type="submit" value="Save" class="btn btn-default" />
             </div>
         </div>
     </div>
-}
-
-<div>
-    @Html.ActionLink("Back to List", "Index")
 </div>
+
 
 @section Scripts {
     @Scripts.Render("~/bundles/jqueryval")
